@@ -1,6 +1,6 @@
-import { getHtml } from "./helpers";
+import { getHtml } from "./helpers.js";
 
- /**
+/**
  * @typedef {'high' | 'medium' | 'low'} Urgency - The priority that the tasks
  * should take in terms of how quickly it should be completed
  *
@@ -19,7 +19,7 @@ function createAddingHtml() {
   const dialog = document.createElement("dialog");
 
   dialog.dataset.overlay = undefined;
-  dialog.className = 'overlay';
+  dialog.className = "overlay";
 
   dialog.innerHTML = /* html */ `
       <h2 class="overlay__title">Add Task</h2>
@@ -64,9 +64,9 @@ function createAddingHtml() {
     button,
     dialog,
     form: dialog.querySelector("[data-form]"),
-    cancel: dialog.querySelector("[data-cancel]")
-  }
-};
+    cancel: dialog.querySelector("[data-cancel]"),
+  };
+}
 
 /**
  * @typedef {object} Data
@@ -94,36 +94,42 @@ export const createAdding = () => {
 
   const state = {
     submission: undefined,
+  };
 
-  }
-
-  button.addEventListener('click', () => {
+  button.addEventListener("click", () => {
     dialog.showModal();
-  })
-  cancel.addEventListener('click', () => {
+  });
+
+  cancel.addEventListener("click", () => {
     dialog.close();
   });
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     if (typeof state.submission !== "function") {
-      throw new Error('"Submission" value has to be se as a function')
-    };
+      throw new Error('"Submission" value has to be se as a function');
+    }
 
-    const entries = new FormData(event.target)
-    const {} = Object.fromEntries(entries)
+    if (!(event.target instanceof HTMLFormElement)) {
+      throw new Error("form not found");
+    }
 
+    const entries = new FormData(event.target);
+    const response = Object.fromEntries(entries);
+    state.submission(response);
+
+    event.target.reset();
     dialog.close();
   });
 
   return {
     get submission() {
-      return state.submission
+      return state.submission;
     },
 
     set submission(newValue) {
-      state.submission = newValue
+      state.submission = newValue;
     },
   };
 };

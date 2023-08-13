@@ -6,6 +6,7 @@ This todo app is designed to be incredibly simple and user-friendly, with a focu
 <!-- omit in toc -->
 ## Table of Contents
 
+- [Features](#features)
 - [Requirements](#requirements)
 - [Data](#data)
 - [Getting Started](#getting-started)

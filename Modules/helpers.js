@@ -1,5 +1,3 @@
-// @ts-check
-
 /*
 Solid
 * The Single-responsibility principle: "there should be more
@@ -32,13 +30,15 @@ Solid
 export const getHtml = (props) => {
   const { dataAttr, value, target } = props;
 
-  const selector = value ? `data-${dataAttr}="${value}"` : `data-${dataAttr}`;
+  const selector = value 
+  ? `[data-${dataAttr}="${value}"]` 
+  : `[data-${dataAttr}]`;
 
   const scope = target || document;
   const element = scope.querySelector(selector);
   const isHtmlElement = element instanceof HTMLElement;
 
-  if (!(isHtmlElement)) {
+  if (!isHtmlElement) {
     throw new Error(`${selector} attribute not found in HTML`);
   }
 
@@ -62,4 +62,4 @@ export const doesHtmlExist = (dataAttr, value) => {
   return isHtmlElement;
 };
 
-export const createUniqueId = () => {}
+export const createUniqueId = () => {};

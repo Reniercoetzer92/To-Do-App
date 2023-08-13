@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * /**
  * @typedef {'high' | 'medium' | 'low'} Urgency - The priority that the tasks
@@ -22,7 +20,7 @@
  * @prop {Urgency} urgency - A user specified indication of how important the task
  */
 
-import { doesHtmlExist, getHtml, createUniqueId } from "./helpers";
+import { doesHtmlExist, getHtml, createUniqueId } from "./helpers.js";
 
 /**
  * @typedef {Pick<Task, 'completed' | 'due' | 'title' | 'urgency'>} Props
@@ -38,19 +36,19 @@ const addTaskToHtml = (id) => {
     throw new Error("task with that ID already added");
   }
 
-  const list = getHtml({ dataAttr: "data-list" });
+  const list = getHtml({ dataAttr: "list" });
   const preview = document.createElement("li");
   preview.className = "task";
   preview.dataset.task = id;
 
   preview.innerHTML = /* html */ `
       <label class="task__check">
-      <input class="task__input" data-checkbox type="checkbox" disabled/>
+      <input class="task__input" data-checkbox type="checkbox"/>
       </label>
 
-      <button class="task__title" data-title disabled>Wash the dog</button>
+      <button class="task__title" data-title>Wash the dog</button>
 
-      <button class="task__check" data-delete style="display: none">
+      <button class="task__check" data-delete />
       <svg
         class="task__icon" 
         xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +101,7 @@ export const createTask = (props) => {
    */
 
   const state = {
-    id: ' ',
+    id: " ",
     completed: false,
     created: new Date(),
     ...props,
@@ -117,20 +115,21 @@ export const createTask = (props) => {
   });
 
   return {
-    get id () {
+    get id() {
       return state.id;
     },
 
-    set id (newValue) {
-      throw new Error ('Cannot directly change ID');
+    set id(newValue) {
+      throw new Error("Cannot directly change ID");
     },
 
-    get completed () {
+    get completed() {
       return state.completed;
     },
 
-    set completed (newValue) {
-      if (typeof newValue !== 'boolean') throw new Error ('"completed" is not a boolean');
+    set completed(newValue) {
+      if (typeof newValue !== "boolean")
+        throw new Error('"completed" is not a boolean');
       if (newValue === state.completed) return;
       state.completed = newValue;
 
@@ -139,23 +138,25 @@ export const createTask = (props) => {
       });
     },
 
-    get created () {
+    get created() {
       return state.created;
     },
 
     set created(newValue) {
-      throw new Error ('Cannot directly change created')
+      throw new Error("Cannot directly change created");
     },
 
-    get title () {
+    get title() {
       return state.title;
     },
 
-    set title (newValue) {
-      if (!newValue || typeof newValue !== "string" || newValue.trim() === " "){
-        throw new Error('"title" is required to be a non-empty string')
+    set title(newValue) {
+      if (
+        !newValue || typeof newValue !== "string" || newValue.trim() === " "
+      ) {
+        throw new Error('"title" is required to be a non-empty string');
       }
-      
+
       state.title = newValue;
 
       updateHtmlTask(id, {
@@ -163,32 +164,32 @@ export const createTask = (props) => {
       });
     },
 
-    get urgency () {
+    get urgency() {
       return state.urgency;
     },
 
-    set urgency (newValue) {
+    set urgency(newValue) {
       /**
        * @type {Array<Urgency>}
        */
-      const valid = ['high', 'low', 'medium'];
+      const valid = ["high", "low", "medium"];
 
       if (!valid.includes(newValue))
-      throw new Error('Valid is required to be high, low or medium')
+        throw new Error("Valid is required to be high, low or medium");
     },
 
-    get due () {
+    get due() {
       return state.due;
     },
 
-    set due (newValue) {
+    set due(newValue) {
       if (!(newValue instanceof Date)) {
         throw new Error("due is required to be a date");
       }
 
-      state.due = newValue
-    }
+      state.due = newValue;
+    },
   };
 };
-  
+
 export default createTask;
